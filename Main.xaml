@@ -1,4 +1,13 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="1497,1173" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:um="clr-namespace:UiPath.MLServices;assembly=UiPath.MLServices" xmlns:uma="clr-namespace:UiPath.MLServices.Activities;assembly=UiPath.MLServices.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:um="clr-namespace:UiPath.MLServices;assembly=UiPath.MLServices" xmlns:uma="clr-namespace:UiPath.MLServices.Activities;assembly=UiPath.MLServices.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="InTexto" Type="InArgument(x:String)" />
+    <x:Property Name="outClassific" Type="OutArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1166,1704</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System.Activities</x:String>
@@ -25,6 +34,8 @@
       <x:String>UiPath.MLServices</x:String>
       <x:String>Newtonsoft.Json.Linq</x:String>
       <x:String>Newtonsoft.Json</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -51,47 +62,84 @@
       <AssemblyReference>UiPath.CV</AssemblyReference>
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="392,1008" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="725,1539" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:String" Name="ttt" />
       <Variable x:TypeArguments="x:String" Name="result" />
       <Variable x:TypeArguments="njl:JObject" Name="category" />
       <Variable x:TypeArguments="x:Int32" Name="statusCode" />
       <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="headersML" />
-      <Variable x:TypeArguments="x:Double" Name="confidence" />
+      <Variable x:TypeArguments="x:Double" Name="confidence">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Double" />
+        </Variable.Default>
+      </Variable>
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InputDialog Options="{x:Null}" DisplayName="Input Dialog" sap:VirtualizedContainerService.HintSize="350,92" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Entre com a frase a ser classificada" Title="Text Classification">
-      <ui:InputDialog.Result>
-        <OutArgument x:TypeArguments="x:String">[ttt]</OutArgument>
-      </ui:InputDialog.Result>
-    </ui:InputDialog>
-    <uma:MLSkills ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Name="{x:Null}" NumberOfRetries="{x:Null}" Result="{x:Null}" TimeOutMs="{x:Null}" DisplayName="MLSkill" sap:VirtualizedContainerService.HintSize="350,352" sap2010:WorkflowViewState.IdRef="MLSkills_1" Item="[ttt]" JsonResponse="[result]" NextPageNum="2" RefreshList="False" ResponseHeaders="[headersML]" StatusCode="[statusCode]" TotalCount="1">
+    <If Condition="[String.IsNullOrEmpty(InTexto)]" sap:VirtualizedContainerService.HintSize="683,386" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Input Dialog" sap:VirtualizedContainerService.HintSize="334,238" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Entre com a frase a ser classificada" Title="Text Classification">
+          <ui:InputDialog.Result>
+            <OutArgument x:TypeArguments="x:String">[InTexto]</OutArgument>
+          </ui:InputDialog.Result>
+        </ui:InputDialog>
+      </If.Then>
+    </If>
+    <uma:MLSkills ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Name="{x:Null}" NumberOfRetries="{x:Null}" Result="{x:Null}" SelectedMLSkill="{x:Reference __ReferenceID0}" TimeOutMs="{x:Null}" DisplayName="MLSkill" sap:VirtualizedContainerService.HintSize="683,350" sap2010:WorkflowViewState.IdRef="MLSkills_1" Item="[InTexto]" JsonResponse="[result]" NextPageNum="2" RefreshList="False" ResponseHeaders="[headersML]" StatusCode="[statusCode]" TotalCount="1">
       <uma:MLSkills.MLSkillList>
         <scg:List x:TypeArguments="um:MLSkill" Capacity="4">
-          <x:Reference>__ReferenceID0</x:Reference>
+          <um:MLSkill x:Name="__ReferenceID0" AccessUri="https://aifabric.deskover.com/mlskills/649d081e-dfbf-4e2d-b0b0-a41c2dea3a88/48db1b7d-b530-4d8c-877b-6dc50027356a/textclassification" Description="Text Classification for C6Bank" Id="8bea637c-41ea-430c-8866-894abeb13235" InputDescription="Text to be classified as String: 'I loved this movie.'" InputType="JSON" Name="TextClassification" OutputDescription="JSON with pedicted class name, associated confidence on that class prediction (between 0-1). For example: {&quot;prediction&quot;: &quot;Positive&quot;, &quot;confidence&quot;: 0.9422031841278076}" ProjectId="dd6fd7c1-6e2f-4c18-99a5-dae857d586f2" TenantId="48db1b7d-b530-4d8c-877b-6dc50027356a" />
         </scg:List>
       </uma:MLSkills.MLSkillList>
-      <uma:MLSkills.SelectedMLSkill>
-        <um:MLSkill x:Name="__ReferenceID0" AccessUri="https://aifabric.deskover.com/mlskills/649d081e-dfbf-4e2d-b0b0-a41c2dea3a88/48db1b7d-b530-4d8c-877b-6dc50027356a/textclassification" Description="" Id="486e143b-d3c5-447d-8f3a-ad82b9d1f93f" InputDescription="Text to be classified as String: 'I loved this movie.'" InputType="JSON" Name="TextClassification" OutputDescription="JSON with pedicted class name, associated confidence on that class prediction (between 0-1). For example: {&quot;prediction&quot;: &quot;Positive&quot;, &quot;confidence&quot;: 0.9422031841278076}" ProjectId="dd6fd7c1-6e2f-4c18-99a5-dae857d586f2" TenantId="48db1b7d-b530-4d8c-877b-6dc50027356a" />
-      </uma:MLSkills.SelectedMLSkill>
     </uma:MLSkills>
-    <ui:DeserializeJson x:TypeArguments="njl:JObject" DisplayName="Deserialize JSON" sap:VirtualizedContainerService.HintSize="350,60" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1" JsonObject="[category]" JsonString="[result]" />
-    <Assign sap:VirtualizedContainerService.HintSize="350,60" sap2010:WorkflowViewState.IdRef="Assign_2">
-      <Assign.To>
-        <OutArgument x:TypeArguments="x:Double">[confidence]</OutArgument>
-      </Assign.To>
-      <Assign.Value>
-        <InArgument x:TypeArguments="x:Double">[CDbl(category("confidence").ToString)*100]</InArgument>
-      </Assign.Value>
-    </Assign>
-    <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="350,59" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;Categoria: &quot; + category(&quot;prediction&quot;).ToString + vbCrLf + &quot;Assertividade: &quot; + string.Format(&quot;{0:0.00}&quot;, confidence) + &quot; %&quot;]" />
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="350,93" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Categoria: &quot; + category(&quot;prediction&quot;).ToString + vbCrLf + &quot;Assertividade: &quot; + string.Format(&quot;{0:0.00}&quot;, confidence) + &quot; %&quot;]" />
+    <ui:DeserializeJson x:TypeArguments="njl:JObject" DisplayName="Deserialize JSON" sap:VirtualizedContainerService.HintSize="683,60" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1" JsonObject="[category]" JsonString="[result]" />
+    <If Condition="[category IsNot Nothing]" sap:VirtualizedContainerService.HintSize="683,531" sap2010:WorkflowViewState.IdRef="If_2">
+      <If.Then>
+        <Sequence sap:VirtualizedContainerService.HintSize="376,383" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_2">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Double">[confidence]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Double">[CDbl(category("confidence").ToString)*100]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Categoria: &quot; + category(&quot;prediction&quot;).ToString + vbCrLf + &quot;Assertividade: &quot; + string.Format(&quot;{0:0.00}&quot;, confidence) + &quot; %&quot;]" />
+          <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[outClassific]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">["Categoria: " + category("prediction").ToString + vbCrLf + "Assertividade: " + string.Format("{0:0.00}", confidence) + " %"]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_4">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[outClassific]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">Erro ao executar Machine Learning, por favor tente novamente.</InArgument>
+          </Assign.Value>
+        </Assign>
+      </If.Else>
+    </If>
   </Sequence>
 </Activity>
