@@ -2,11 +2,12 @@
   <x:Members>
     <x:Property Name="InTexto" Type="InArgument(x:String)" />
     <x:Property Name="outClassific" Type="OutArgument(x:String)" />
+    <x:Property Name="InDelay" Type="InArgument(x:TimeSpan)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1166,1704</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>2112,1715</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -36,6 +37,16 @@
       <x:String>Newtonsoft.Json</x:String>
       <x:String>System.Activities.DynamicUpdate</x:String>
       <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Dynamic</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Collections.Specialized</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>UiPath.Web.Activities</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>UiPath.MLServices.Enums</x:String>
+      <x:String>UiPath.MLServices.Activities</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -67,26 +78,29 @@
       <AssemblyReference>UiPath.OCR.Activities.Design</AssemblyReference>
       <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.MLServices.Activities</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap:VirtualizedContainerService.HintSize="725,1539" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap:VirtualizedContainerService.HintSize="797,1550" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="result" />
       <Variable x:TypeArguments="njl:JObject" Name="category" />
       <Variable x:TypeArguments="x:Int32" Name="statusCode" />
       <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="headersML" />
-      <Variable x:TypeArguments="x:Double" Name="confidence">
-        <Variable.Default>
-          <Literal x:TypeArguments="x:Double" />
-        </Variable.Default>
-      </Variable>
+      <Variable x:TypeArguments="x:Double" Default="0" Name="confidence" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <If Condition="[String.IsNullOrEmpty(InTexto)]" sap:VirtualizedContainerService.HintSize="683,386" sap2010:WorkflowViewState.IdRef="If_1">
+    <If Condition="[String.IsNullOrEmpty(InTexto)]" sap:VirtualizedContainerService.HintSize="755,415" sap2010:WorkflowViewState.IdRef="If_1">
       <If.Then>
         <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Input Dialog" sap:VirtualizedContainerService.HintSize="334,238" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Entre com a frase a ser classificada" Title="Text Classification">
           <ui:InputDialog.Result>
@@ -95,50 +109,48 @@
         </ui:InputDialog>
       </If.Then>
     </If>
-    <uma:MLSkills ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Name="{x:Null}" NumberOfRetries="{x:Null}" Result="{x:Null}" SelectedMLSkill="{x:Reference __ReferenceID0}" TimeOutMs="{x:Null}" DisplayName="MLSkill" sap:VirtualizedContainerService.HintSize="683,350" sap2010:WorkflowViewState.IdRef="MLSkills_1" Item="[InTexto]" JsonResponse="[result]" NextPageNum="2" RefreshList="False" ResponseHeaders="[headersML]" StatusCode="[statusCode]" TotalCount="1">
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="755,91" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Iniciando execução do ML para classificação do texto&quot;]" />
+    <uma:MLSkills ContinueOnError="{x:Null}" DelayAfter="{x:Null}" DelayBefore="{x:Null}" Name="{x:Null}" NumberOfRetries="{x:Null}" Result="{x:Null}" TimeOutMs="{x:Null}" ApiKey="1e3f00a8-c664-491d-88ef-edd70eaaef4b" Connection="Endpoint" DisplayName="MLSkill" ExternApiFileType="JSON" sap:VirtualizedContainerService.HintSize="755,391" sap2010:WorkflowViewState.IdRef="MLSkills_1" Item="[InTexto]" JsonResponse="[result]" NextPageNum="2" RefreshList="False" ResponseHeaders="[headersML]" SkillURL="https://ai-stg-uipath.deskover.com/public/mlskills/98b4b292-c796-428b-8507-8f2ac4d39fbd/c8936d0c-f51b-4dea-8d49-df5f4cce8b5b/tc" StatusCode="[statusCode]" TotalCount="2">
       <uma:MLSkills.MLSkillList>
         <scg:List x:TypeArguments="um:MLSkill" Capacity="4">
-          <um:MLSkill x:Name="__ReferenceID0" AccessUri="https://aifabric.deskover.com/mlskills/649d081e-dfbf-4e2d-b0b0-a41c2dea3a88/48db1b7d-b530-4d8c-877b-6dc50027356a/textclassification" Description="Text Classification for C6Bank" Id="8bea637c-41ea-430c-8866-894abeb13235" InputDescription="Text to be classified as String: 'I loved this movie.'" InputType="JSON" Name="TextClassification" OutputDescription="JSON with pedicted class name, associated confidence on that class prediction (between 0-1). For example: {&quot;prediction&quot;: &quot;Positive&quot;, &quot;confidence&quot;: 0.9422031841278076}" ProjectId="dd6fd7c1-6e2f-4c18-99a5-dae857d586f2" TenantId="48db1b7d-b530-4d8c-877b-6dc50027356a" />
+          <um:MLSkill AccessUri="https://ai-stg-uipath.deskover.com/mlskills/98b4b292-c796-428b-8507-8f2ac4d39fbd/c8936d0c-f51b-4dea-8d49-df5f4cce8b5b/tc" AccountId="98b4b292-c796-428b-8507-8f2ac4d39fbd" Description="" Id="454785b5-cd0a-4f0b-bafc-4810f9a5a175" InputDescription="Text to be classified as String: 'I loved this movie.'" InputType="JSON" Name="TC" OutputDescription="JSON with pedicted class name, associated confidence on that class prediction (between 0-1).  For example: {\&quot;prediction\&quot;: \&quot;Positive\&quot;, \&quot;confidence\&quot;: 0.9422031841278076,}" ProjectId="a947a61f-6acf-4c80-bfc8-e8cad49b0832" TenantId="c8936d0c-f51b-4dea-8d49-df5f4cce8b5b" />
+          <x:Reference>__ReferenceID0</x:Reference>
         </scg:List>
       </uma:MLSkills.MLSkillList>
+      <uma:MLSkills.SelectedMLSkill>
+        <um:MLSkill x:Name="__ReferenceID0" AccessUri="https://ai-stg-uipath.deskover.com/mlskills/98b4b292-c796-428b-8507-8f2ac4d39fbd/c8936d0c-f51b-4dea-8d49-df5f4cce8b5b/textclassification" AccountId="98b4b292-c796-428b-8507-8f2ac4d39fbd" Description="" Id="72fe190d-58d5-4146-ae51-7ef129f7b3c8" InputDescription="Text to be classified as String: 'I loved this movie.'" InputType="JSON" Name="TextClassification" OutputDescription="JSON with pedicted class name, associated confidence on that class prediction (between 0-1).  For example: {\&quot;prediction\&quot;: \&quot;Positive\&quot;, \&quot;confidence\&quot;: 0.9422031841278076,}" ProjectId="b6f9af99-74b7-4461-8a3f-69d46f3f2e71" TenantId="c8936d0c-f51b-4dea-8d49-df5f4cce8b5b" />
+      </uma:MLSkills.SelectedMLSkill>
     </uma:MLSkills>
-    <ui:DeserializeJson x:TypeArguments="njl:JObject" DisplayName="Deserialize JSON" sap:VirtualizedContainerService.HintSize="683,60" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1" JsonObject="[category]" JsonString="[result]" />
-    <If Condition="[category IsNot Nothing]" sap:VirtualizedContainerService.HintSize="683,531" sap2010:WorkflowViewState.IdRef="If_2">
+    <If Condition="[statusCode = 200]" sap:VirtualizedContainerService.HintSize="755,441" sap2010:WorkflowViewState.IdRef="If_4">
       <If.Then>
-        <Sequence sap:VirtualizedContainerService.HintSize="376,383" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke ProcessClassificationResult workflow" sap:VirtualizedContainerService.HintSize="334,112" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" LogEntry="No" LogExit="No" UnSafe="False" WorkflowFileName="ProcessClassificationResult.xaml">
+          <ui:InvokeWorkflowFile.Arguments>
+            <InArgument x:TypeArguments="x:String" x:Key="result">[result]</InArgument>
+            <OutArgument x:TypeArguments="njl:JObject" x:Key="category">[category]</OutArgument>
+            <InOutArgument x:TypeArguments="x:Double" x:Key="confidence">[confidence]</InOutArgument>
+            <OutArgument x:TypeArguments="x:String" x:Key="outClassific">[outClassific]</OutArgument>
+            <InOutArgument x:TypeArguments="x:TimeSpan" x:Key="InDelay">[InDelay]</InOutArgument>
+          </ui:InvokeWorkflowFile.Arguments>
+        </ui:InvokeWorkflowFile>
+      </If.Then>
+      <If.Else>
+        <Sequence DisplayName="MLFailedExecution" sap:VirtualizedContainerService.HintSize="376,283" sap2010:WorkflowViewState.IdRef="Sequence_3">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_2">
-            <Assign.To>
-              <OutArgument x:TypeArguments="x:Double">[confidence]</OutArgument>
-            </Assign.To>
-            <Assign.Value>
-              <InArgument x:TypeArguments="x:Double">[CDbl(category("confidence").ToString)*100]</InArgument>
-            </Assign.Value>
-          </Assign>
-          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Categoria: &quot; + category(&quot;prediction&quot;).ToString + vbCrLf + &quot;Assertividade: &quot; + string.Format(&quot;{0:0.00}&quot;, confidence) + &quot; %&quot;]" />
-          <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,91" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[&quot;Erro ao executar Machine Learning, por favor tente novamente.&quot; + vbCrLf + &quot;Code: &quot; + statusCode.ToString]" />
+          <Assign DisplayName="AssignResultErr" sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_4">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">[outClassific]</OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="x:String">["Categoria: " + category("prediction").ToString + vbCrLf + "Assertividade: " + string.Format("{0:0.00}", confidence) + " %"]</InArgument>
+              <InArgument x:TypeArguments="x:String">Erro ao executar Machine Learning, por favor tente novamente.</InArgument>
             </Assign.Value>
           </Assign>
         </Sequence>
-      </If.Then>
-      <If.Else>
-        <Assign sap:VirtualizedContainerService.HintSize="262,60" sap2010:WorkflowViewState.IdRef="Assign_4">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[outClassific]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">Erro ao executar Machine Learning, por favor tente novamente.</InArgument>
-          </Assign.Value>
-        </Assign>
       </If.Else>
     </If>
   </Sequence>
