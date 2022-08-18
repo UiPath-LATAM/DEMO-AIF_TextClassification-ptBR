@@ -6,7 +6,7 @@
     <x:Property Name="outClassific" Type="OutArgument(x:String)" />
     <x:Property Name="InDelay" Type="InOutArgument(x:TimeSpan)" />
   </x:Members>
-  <sap:VirtualizedContainerService.HintSize>2112,1683</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1628,1593</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="32">
@@ -82,7 +82,7 @@
       <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="ProcessClassificationResult" sap:VirtualizedContainerService.HintSize="526,1518" sap2010:WorkflowViewState.IdRef="Sequence_5">
+  <Sequence DisplayName="ProcessClassificationResult" sap:VirtualizedContainerService.HintSize="526,1528" sap2010:WorkflowViewState.IdRef="Sequence_5">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -108,33 +108,30 @@
         <InArgument x:TypeArguments="x:String">["Categoria: " + category("prediction").ToString + vbCrLf + "Assertividade: " + string.Format("{0:0.00}", confidence) + " %"]</InArgument>
       </Assign.Value>
     </Assign>
-    <uma:MLStorageUpload Body="{x:Null}" ContinueOnError="{x:Null}" FileName="{x:Null}" FileNameInStorage="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" RuntimeDataset="{x:Null}" RuntimeProject="{x:Null}" StatusCode="{x:Null}" ApiKey="a611f28d-32cc-48be-82b5-27760bc6b632" Connection="Robot" DatasetPublicUrl="https://ai-stg-uipath.deskover.com/public/mlskills/98b4b292-c796-428b-8507-8f2ac4d39fbd/c8936d0c-f51b-4dea-8d49-df5f4cce8b5b/textclassification" DisplayName="Upload File" FilePath="C:\Users\marcio.bouzon\OneDrive - UiPath\Customers\C6Bank\TrainingData\continuous\Base_emailbot_02022021.csv" sap:VirtualizedContainerService.HintSize="484,271" sap2010:WorkflowViewState.IdRef="MLStorageUpload_1" RefreshDataset="False" RefreshProject="False" StoragePath="continuous">
+    <uma:MLStorageUpload Body="{x:Null}" ContinueOnError="{x:Null}" FileName="{x:Null}" FileNameInStorage="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" RuntimeDataset="{x:Null}" RuntimeProject="{x:Null}" SelectedDataset="{x:Reference __ReferenceID0}" SelectedProject="{x:Reference __ReferenceID1}" StatusCode="{x:Null}" ApiKey="996b73de-024d-4b5e-b981-e8d3b0d2fb6f" Connection="Robot" DatasetPublicUrl="https://staging.uipath.com/bznstg/bzndemos/aifabric_/ai-trainer/v1/signedURL/public?blobName=a364ab51-09c2-429f-95b3-5399eaf7664a/3676f874-478a-4898-828f-55316ecf1470" DisplayName="Upload File" FilePath="C:\Users\marcio.bouzon\OneDrive - UiPath\Customers\C6Bank\TrainingData\continuous\Base_test_emailbot_2.csv" sap:VirtualizedContainerService.HintSize="484,271" sap2010:WorkflowViewState.IdRef="MLStorageUpload_1" RefreshDataset="False" RefreshProject="False" StoragePath="continuous">
       <uma:MLStorageUpload.Datasets>
         <um:PageData x:TypeArguments="um:Dataset" PageNum="1" PageSize="50" TotalCount="1">
           <um:PageData.DataList>
             <scg:List x:TypeArguments="um:Dataset" Capacity="4">
-              <x:Reference>__ReferenceID1</x:Reference>
+              <um:Dataset x:Name="__ReferenceID0" Id="3676f874-478a-4898-828f-55316ecf1470" Name="TrainingData" ProjectId="a364ab51-09c2-429f-95b3-5399eaf7664a" />
             </scg:List>
           </um:PageData.DataList>
         </um:PageData>
       </uma:MLStorageUpload.Datasets>
       <uma:MLStorageUpload.Projects>
-        <um:PageData x:TypeArguments="um:Project" PageNum="1" PageSize="50" TotalCount="1">
+        <um:PageData x:TypeArguments="um:Project" PageNum="1" PageSize="50" TotalCount="4">
           <um:PageData.DataList>
             <scg:List x:TypeArguments="um:Project" Capacity="4">
-              <x:Reference>__ReferenceID0</x:Reference>
+              <um:Project Id="122682e9-fcb1-4657-aa20-3585c16c23da" Name="DEMO_ENEL_BILL" />
+              <um:Project Id="b93b53b4-4f97-4d3c-ba13-5022280eef65" Name="NER Test" />
+              <um:Project x:Name="__ReferenceID1" Id="a364ab51-09c2-429f-95b3-5399eaf7664a" Name="TextClassification" />
+              <um:Project Id="4be791af-bd04-482c-8ab6-bd2bed7a3e33" Name="ttt" />
             </scg:List>
           </um:PageData.DataList>
         </um:PageData>
       </uma:MLStorageUpload.Projects>
-      <uma:MLStorageUpload.SelectedDataset>
-        <um:Dataset x:Name="__ReferenceID1" Id="c7448615-8d75-4448-9eb3-b59333a3437b" Name="TrainingData" ProjectId="b6f9af99-74b7-4461-8a3f-69d46f3f2e71" />
-      </uma:MLStorageUpload.SelectedDataset>
-      <uma:MLStorageUpload.SelectedProject>
-        <um:Project x:Name="__ReferenceID0" Id="b6f9af99-74b7-4461-8a3f-69d46f3f2e71" Name="EmailClassification" />
-      </uma:MLStorageUpload.SelectedProject>
     </uma:MLStorageUpload>
-    <If Condition="[InDelay &lt;&gt; Nothing]" sap:VirtualizedContainerService.HintSize="484,422" sap2010:WorkflowViewState.IdRef="If_3">
+    <If Condition="[InDelay &lt;&gt; Nothing]" sap:VirtualizedContainerService.HintSize="484,432" sap2010:WorkflowViewState.IdRef="If_3">
       <If.Then>
         <Sequence sap:VirtualizedContainerService.HintSize="376,245" sap2010:WorkflowViewState.IdRef="Sequence_4">
           <sap:WorkflowViewStateService.ViewState>
